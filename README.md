@@ -14,3 +14,7 @@ The App will then show all your added todos in a small little view. You can now 
 * `delete [ID]` Deletes the Todo corresponding to [ID].
 * `print` Prints the Todo-List.
 * `exit` Exits the program.
+
+## **V2 (Telegram-BOT)**
+
+By entering `./todolist -tele` in your terminal, you will start the Telegram Bot on your local device.

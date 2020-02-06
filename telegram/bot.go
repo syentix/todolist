@@ -14,7 +14,7 @@ func StartBot() {
 		log.Panic(err)
 	}
 
-	bot.Debug = true
+	bot.Debug = false
 
 	log.Printf("Authorized on account %s", bot.Self.UserName)
 
@@ -33,10 +33,30 @@ func StartBot() {
 		// Declaring reply_msg Text.
 		var replyMsg string = ""
 
-		
+		// Getting command from Message.
+		var command string = strings.Split(update.Message.Text, " ")[0]
+		var text []string = strings.Split(update.Message.Text, " ")
+		// Deletes Command from Text.
+		text = append(text[:0], text[0+1:]...)
+		msg := strings.Join(text, " ")
 
+		// Command Handling
+		switch command {
+		case "!add":
+			updatePackage := Package{update.Message.From.UserName,
+				msg,
+				"/"}
+			AddToDo(updatePackage)
+		}
+
+		// Sending Reply.
 		reply := tgbotapi.NewMessage(update.Message.Chat.ID, replyMsg)
-
 		bot.Send(reply)
 	}
+}
+
+type Package struct {
+	userID string
+	text   string
+	todoID string
 }
