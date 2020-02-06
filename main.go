@@ -5,36 +5,37 @@ import (
 	"fmt"
 	"os"
 
-	_ "github.com/go-sql-driver/mysql"
-
 	"./config"
 	"./database"
 	"./input"
+	"./telegram"
+	_ "github.com/go-sql-driver/mysql"
 )
 
 func main() {
-
-	err := config.ReadConfig()
-	if err != nil {
-		panic(err.Error())
-	}
-
-	database.DBCon, err = sql.Open("mysql", config.Creds)
-	if err != nil {
-		panic(err.Error())
-	}
-
-	// Opening Inputreader.
 	if len(os.Args) > 1 {
-		if os.Args[1] == "-c" {
-			input.StartReader()
-		} else if os.Args[1] == "-tele" {
-			// TODO: Call Telegram-Bot.
+		// Reading Config-File.
+		err := config.ReadConfig()
+		if err != nil {
+			panic(err.Error())
 		}
+		// CLI-Mode
+		if os.Args[1] == "-c" {
+			database.DBCon, err = sql.Open("mysql", config.Creds)
+			if err != nil {
+				panic(err.Error())
+			}
+			// Opening Inputreader.
+			input.StartReader()
+			defer database.DBCon.Close()
+		}
+		if os.Args[1] == "-tele" {
+			telegram.StartBot()
+		}
+		os.Exit(0)
 	} else {
 		fmt.Println("No flag given, what da hell am I supposed to do now?")
 		defer os.Exit(0)
 	}
 
-	defer database.DBCon.Close()
 }

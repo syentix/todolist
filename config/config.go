@@ -7,12 +7,14 @@ import (
 )
 
 var (
-	Creds  string
-	config *configStruct
+	Creds       string
+	TelegramAPI string
+	config      *configStruct
 )
 
 type configStruct struct {
-	Creds string `json:"credentials"`
+	Creds       string `json:"credentials"`
+	TelegramAPI string `json:"telegram-http-api"`
 }
 
 func ReadConfig() error {
@@ -29,6 +31,7 @@ func ReadConfig() error {
 	}
 
 	Creds = config.Creds
+	TelegramAPI = config.TelegramAPI
 
 	return nil
 }
