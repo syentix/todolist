@@ -4,8 +4,6 @@ Little side project, I worked on, when I was bored. Works for CLI for now, will 
 
 ## **V1 (CLI)**
 
----
-
 By entering `./todolist -c` in your terminal, you will open the App in CLI-mode.
 The App will then show all your added todos in a small little view. You can now type commands.
 
