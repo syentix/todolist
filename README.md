@@ -11,5 +11,6 @@ The App will then show all your added todos in a small little view. You can now 
 
 * `add [Todo-Text]` This will add a Todo to the database.
 * `check [ID]` This will put a checkmark next to the Todo corresponding to [ID].
+* `delete [ID]` Deletes the Todo corresponding to [ID].
 * `print` Prints the Todo-List.
 * `exit` Exits the program.

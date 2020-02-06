@@ -42,7 +42,7 @@ func StartReader() {
 			printToDoList()
 		case "exit":
 			fmt.Println("Exiting...")
-			os.Exit(100)
+			os.Exit(0)
 		case "check":
 			checkID, err := strconv.Atoi(todo)
 			if err != nil {
@@ -51,6 +51,13 @@ func StartReader() {
 			check(checkID)
 			printToDoList()
 		case "print":
+			printToDoList()
+		case "delete":
+			checkID, err := strconv.Atoi(todo)
+			if err != nil {
+				fmt.Println("Try Again! Usage is: check <ID>")
+			}
+			delete(checkID)
 			printToDoList()
 		default:
 			fmt.Println("No Such Command.")
@@ -104,20 +111,37 @@ func printToDoList() {
 }
 
 func check(checkID int) {
-	// Check if ID exits!
-	query := fmt.Sprintf("SELECT id FROM todos WHERE id=%d", checkID)
-	selectQ, _ := database.DBCon.Query(query)
-	if selectQ.Next() == false {
-		fmt.Println("ERROR: ID doesn't exist. Try again!")
-		return
-	}
-	defer selectQ.Close()
+	if !idExists(checkID) { return }
 	// Updating.
-	query = fmt.Sprintf("UPDATE todos SET completed=TRUE WHERE id=%d", checkID)
+	query := fmt.Sprintf("UPDATE todos SET completed=TRUE WHERE id=%d", checkID)
 	update, err := database.DBCon.Query(query)
 	if err != nil {
 		panic(err.Error())
 	}
 	fmt.Println("== Good Job! ==")
 	defer update.Close()
+}
+
+func delete(checkID int) {
+	if !idExists(checkID) { return }
+	// Deleting
+	query := fmt.Sprintf("DELETE FROM todos WHERE id=%d", checkID)
+	update, err := database.DBCon.Query(query)
+	if err != nil {
+		panic(err.Error())
+	}
+	fmt.Println("== Deleted! ==")
+	defer update.Close()
+}
+
+func idExists(id int) bool {
+	// Check if ID exits!
+	query := fmt.Sprintf("SELECT id FROM todos WHERE id=%d", id)
+	selectQ, _ := database.DBCon.Query(query)
+	if selectQ.Next() == false {
+		fmt.Println("ERROR: ID doesn't exist. Try again!")
+		return false
+	}
+	defer selectQ.Close()
+	return true
 }

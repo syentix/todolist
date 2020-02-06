@@ -2,6 +2,8 @@ package main
 
 import (
 	"database/sql"
+	"fmt"
+	"os"
 
 	_ "github.com/go-sql-driver/mysql"
 
@@ -23,7 +25,16 @@ func main() {
 	}
 
 	// Opening Inputreader.
-	input.StartReader()
+	if len(os.Args) > 1 {
+		if os.Args[1] == "-c" {
+			input.StartReader()
+		} else if os.Args[1] == "-tele" {
+			// TODO: Call Telegram-Bot.
+		}
+	} else {
+		fmt.Println("No flag given, what da hell am I supposed to do now?")
+		defer os.Exit(0)
+	}
 
 	defer database.DBCon.Close()
 }
